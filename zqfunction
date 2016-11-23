@@ -1,0 +1,56 @@
+
+	# This function is meant to choose a random zenyatta quote from .zquotes.txt and displays it.
+	#  This function is called on startup in bashrc and can be reference by "zqfunction" from bash.
+	zqfunction() {
+		
+		# Create a psuedo-random integer so that a random line can be chosen (from 1 to 21)
+		randChoice=($(( ( RANDOM % 21 )  + 1 )))
+
+		# Debugging magic
+		#echo "The number chosen this time is " "$randChoice";
+	
+		#echo "$randChoice";
+
+		#t here is each line individually. Will stop at the
+		while read t;
+		do
+	
+			#echo "($(cut -c -1))";
+			
+			# If the number is less than 10, the second character will be a space
+			#  thus, we only want to cut one character if it is a one-digit number
+			if [[ $(echo $t | cut -c -2) == ' ' ]]
+				then
+					lineNum=$(echo $t | cut -c -1);
+				else	
+					lineNum=$(echo $t | cut -c -2);
+			fi
+
+			# Debugging magic
+			#lineNum="hey";
+
+			#echo "$lineNum";	
+
+			#echo "This is t:1 - " "$lineNum";
+
+			#echo "$randChoice";
+	
+			# If the choice is numerically equivalent to the selection
+			#  output the line after the numbers
+			if [[ "$(($randChoice))" == "$(($lineNum))" ]]	
+				then
+					# Debugging magic
+					# echo "Match found with " "$lineNum";
+					
+					# This will take/echo everything after the first ' ' character
+					echo ${t#* };
+			fi
+
+		done <zquotes.txt
+
+		# Tests to show that the function is even called
+		# echo "This is a test.\n"
+		
+		# Returns from the function
+		return 0;
+	}
